@@ -7,6 +7,7 @@
 \usepackage{lipsum}
 \usepackage{geometry}
 \usepackage{hyperref}
+\usepackage{amsmath}
 \geometry{
 a4paper,
 tmargin=22mm,
@@ -58,12 +59,29 @@ System Identification is the process of modelling the static and dynamic behavio
 \\
  The three constituents of system identification are a data set, a set of candidate models and a set of criteria, based on which the most suitable model can be chosen. It is important to first set a clear purpose for this process. Decisions such as the desired type of model, the required accuracy, the available computing power and the intended use of the model are made during this phase. Then the suitable estimation method has to be determined based on the \textit{a priori} knowledge about the system and some engineering intuition. To select the appropriate estimation methods, one has to determine whether the system is \textit{linear} or \textit{non-linear}, \textit{time-variant} or \textit{-invariant} as well as other properties such as dead time and settling time. The amount of information available in this stage is crucial to the success of the whole process. Next, a measurement is planned to collect the required data. Here, one has to determine the input signals, sampling time and whether the measurement is to be performed on-line or offline. The data collected is then pre-processed and then a suitable identification method is applied. The resulting model is then validated by comparison of the plant output and model output to the same input. If the model does not pass the validation criteria, the whole process might have to be repeated.In the following sections, the most prominent estimation methods are summarized.\cite{isermann2010identification}\\
  \subsubsection{An Overview of Identification Methods}
-\textit{Paramertic vs. Non-Parametric Methods}\\
+\textit{Non-Parametric Identification Methods}\\
 \\
- The numerous methods available for system identification can be sorted into two main groups: \textit{non-parametric} and \textit{parametric methods}. Non-parametric methods do not explicitly search for a finite set of parameters to provide a mathematical model of the system. They rather search for a correlation between the inputs and outputs of the system either in the frequency domain or in the time domain. Among the non-parametric methods in the time domain are Transient-Response Analysis methods such as Impulse- or Step-Response Analysis, where a pulse or step signal is applied at the input and the output of the system is analysed to obtain the time-response coefficients. With frequency analysis, the aim is to determine the amplitude and phase shift of the output of the system to a sinusoidal input, for example. This process is then repeated for several frequency in the desired frequency band. With Fourier Analysis, it is even possible to apply multi-frequency inputs. There are several other correlation analysis methods that can be used in the time domain and the frequency domain. Non-parametric methods are practical in applications, where an explicit model of the system is needed. However, since the changing dynamics of the process in our application are also of interest, our focus lies on parametric system identification methods explained in the following sections.\\
+ The numerous methods available for system identification can be sorted into two main groups: \textit{non-parametric} and \textit{parametric methods}. Non-parametric methods do not explicitly search for a finite set of parameters to provide a mathematical model of the system. They rather search for a correlation between the inputs and outputs of the system either in the frequency domain or in the time domain. Among the non-parametric methods in the time domain are Transient-Response Analysis methods such as Impulse- or Step-Response Analysis, where a pulse or step signal is applied at the input and the output of the system is analysed to obtain the time-response coefficients. With frequency analysis, the aim is to determine the amplitude and phase shift of the output of the system to a sinusoidal input, for example. This process is then repeated for several frequencies in the desired frequency band. With Fourier Analysis, it is even possible to apply multi-frequency inputs. There are several other correlation analysis methods that can be used in the time and the frequency domains. Non-parametric methods are practical in applications, where an explicit model of the system is not needed. However, since the changing dynamics of the process in our application are also of interest, our focus lies on parametric identification methods explained in the following sections.\\
  \\
- \textit{Models for Parametric Estimation}\\
- \\
+ \textit{Parametric Identification Methods}\\[10pt]
+ Given the following description of a linear time-invariant systems:\\
+ \begin{equation}
+ \label{gen_system}
+ y(t)=G(q,\theta)u(t)+H(q,\theta)e(t)
+ \end{equation}
+ where $y(t)$ represents the output of the system, $u(t)$ represents the input and $e(t)$ is a sequence of random variables (disturbances). $G(q,\theta)$ and $H(q,\theta)$ are both transfer functions that are dependant of a forward shift operator $q$ defined by equation $qu(t)=u(t+1)$ and the \textit{parameter vector} $\theta$. A typical parametric identification problem involves determining a model with a certain model structure $M(\theta)$ parametrized using the parameter vector $\theta$. Such a model represents a way of predicting future outputs of a system. A \textit{predictor model} is one that does not take the random disturbances $/e(t)$ of the system into account, while a \textit{probabilistic model} has a similar form to \ref{gen_system} and includes a characterization of the system's probabilistic properties. The one-step-ahead prediction of a predictor model has the following form. 
+ \begin{equation}
+ \label{predictor}
+ \hat{y}(t,\theta)=H^{-1}(q,\theta)G(q,\theta)u(t)+[1-H^{-1}(q,\theta)]y(t)
+ \end{equation}
+\\
+Now suppose that a set of $N$ samples of data $Z^N$ can be collected form the system in the following form:\\
+\begin{equation}
+Z^N=\begin{bmatrix}
+y(1)&u(1)&y(2)&u(2)\dots y(N)&u(N)
+\end{bmatrix}
+\end{equation}\\
+The parametric identification problem is then concerned with using the information provided by $Z^N$ to estimate the parameter vector $\theta$ that delivers the best model of the system. Therefore, the parametric identification methods are also referred to as \textit{parameter estimation methods} To evaluate the candidate models, the prediction error $\varepsilon(t,\theta)=y(t)-\hat(y)(t,\theta)$ is calculated. The best model has the parameter vector $\theta^*$ that delivers the smallest possible prediction errors $\varepsilon(t,\theta^*)$ at times $t=1,2,\dots, N$. Page 199 Ljung
 
  
  
